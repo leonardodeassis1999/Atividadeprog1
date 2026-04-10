@@ -1,0 +1,61 @@
+create table cliente(
+	id_cliente int auto_increment primary key not null,
+    nome varchar (100) not null,
+    endereco varchar (100) not null);
+    
+insert into cliente(nome, endereco) values ('otavio', 'rua 01');
+insert into cliente(nome, endereco) values ('alex', 'rua 02');
+insert into cliente(nome, endereco) values ('joao', 'rua 03');
+
+drop table cliente;
+    
+create table produtos(
+	id_produtos int auto_increment primary key not null,
+    descricao_produtos varchar (100) not null,
+    preco decimal (10,2) not null,
+    id_cliente int not null,
+    
+foreign key (id_cliente) references cliente(id_cliente));
+
+drop table produtos;
+    
+insert into produtos(descricao_produtos, preco, id_cliente) values ('calca','25.40', 1);
+insert into produtos(descricao_produtos, preco, id_cliente) values ('calca','25.40', 2);
+insert into produtos(descricao_produtos, preco, id_cliente) values ('calca','25.40', 3);
+    
+create table pedidos(
+	id_pedidos int auto_increment primary key not null,
+    descricao_pedidos varchar (100) not null,
+    id_produtos int not null,
+    
+foreign key (id_produtos) references cliente(id_produtos));
+
+insert into pedidos(descricao_pedidos, id_produtos) values ('meia', 1);
+insert into pedidos(descricao_pedidos, id_produtos) values ('calca', 2);
+insert into pedidos(descricao_pedidos, id_produtos) values ('blusa', 3);
+
+drop table pedidos;    
+
+create table item_dos_pedidos(
+	id_item_dos_pedidos int auto_increment primary key not null,
+    descricao_item_dos_pedidos varchar (100) not null,
+    preco decimal (10,2) not null,
+    id_pedidos int not null,
+    
+foreign key (id_pedidos) references cliente(id_pedidos));
+
+insert into item_dos_pedidos(descricao_item_dos_pedidos, preco, id_pedidos) values ('meia','25.40', 1);
+insert into item_dos_pedidos(descricao_item_dos_pedidos, preco, id_pedidos) values ('blusa','27.40', 2);
+insert into item_dos_pedidos(descricao_item_dos_pedidos, preco, id_pedidos) values ('jaqueta','26.40', 3);
+
+drop table item_dos_pedidos;   
+
+select * from cliente;
+select * from produtos;
+select * from pedidos;
+select * from item_pedidos;
+
+delete from cliente;
+delete from produtos;
+delete from pedidos;
+delete from item_dos_pedidos;
