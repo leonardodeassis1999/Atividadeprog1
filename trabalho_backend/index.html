@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>leo</title>
+    <style>
+        table {border-collapse :collapse;margin-bottom: 30px;}
+        th,td {border: 1px solid #ccc ; padding: 8px 12px; text-align: left;}
+        th{background: #f0f0f0 ;}
+    </style>
+</head>
+<body>
+    <h1>Autor</h1>
+    <table id="tabela-carro">   
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>cor</th>
+                <th>modelo</th>
+                <th>ano</th>
+            </tr>
+        </thead>
+    </table>
+    <script>
+        const API_URL = "http://localhost:8000" 
+        async function  carro(){
+            const resposta = await fetch(`${API_URL}/carro`);
+            //const é um jeito de criar uma variavel. significa que nao da de musar a variavel depois.
+            // await serve para esperar o fetch terminar de executar antes de prosseguir. se nao dentro de resposta fica um valor incompleto 
+            //fetch serve para buscar algo. no caso esta buscando dentro de localhost:8000/autor
+            const dados = await resposta.json();
+            //transforma os dados da resposta que esta como texto em .jason formato  [ {registro_autor: 1, nome: "..."}, {...}, ... ] (negocio só entende nesse formato)
+            const corpo = document.querySelector("#tabela-carro tbody")
+            //document.querySelector("#tabela-autor") vasculha toda a pagina html procurando tabela-autor que no caso esta na linha 15
+            dados.innerHTML ="";
+            
+            for(let i = 0; i < carro.length; i++) {const carro = carros[i];}
+
+                corpo.insertAdjacentHTML ("beforeend",
+                 `<tr>
+                    <td>${carro.id}</td>
+                    <td${carro.cor}</td>
+                    <td${carro.modelo}<td
+                    <td${carro.ano}<td>
+                    </tr>`);
+                }
+
+                carregarcarro()
+
+                corpo.innerHTML += `<tr>
+                    <td>${i.id}</td>  
+                    <td>${i.cor}</td> 
+                    <td>${i.modelo}</td>  
+                    <td>${i.ano}</td>   
+                    </tr>`
+
+            
+        carregarcarro()
+    </script>
+</body>
+
+
+</html>
