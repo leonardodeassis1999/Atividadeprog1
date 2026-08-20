@@ -1,0 +1,234 @@
+<!-- aula 13/08/2026!
+exemplo basico de html para estudos!!!!!!-->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Cadastro de Pessoas</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Cadastro de Pessoas</h1>
+
+    <input
+        id="nome"
+        type="text"
+        placeholder="Nome"
+    >
+
+    <input
+        id="cidade"
+        type="text"
+        placeholder="Cidade"
+    >
+
+    <button onclick="salvar()">
+        Salvar
+    </button>
+
+    <h2>Pessoas cadastradas</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cidade</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody id="lista"></tbody>
+
+    </table>
+
+</div>
+
+
+<script>
+
+let idEditando = null;
+
+
+// LISTAR
+async function carregar() {
+
+    const resposta = await fetch("/pessoas");
+
+    const pessoas = await resposta.json();
+
+    const lista = document.getElementById("lista");
+
+    lista.innerHTML = "";
+
+    pessoas.forEach(pessoa => {
+
+        lista.innerHTML += `
+            <tr>
+
+                <td>${pessoa.nome}</td>
+
+                <td>${pessoa.cidade}</td>
+
+                <td>
+
+                    <button onclick="editar(
+                        ${pessoa.id},
+                        '${pessoa.nome}',
+                        '${pessoa.cidade}'
+                    )">
+                        Editar
+                    </button>
+
+                    <button onclick="excluir(${pessoa.id})">
+                        Excluir
+                    </button>
+
+                </td>
+
+            </tr>
+        `;
+
+    });
+
+}
+
+
+// CADASTRAR OU ATUALIZAR
+async function salvar() {
+
+    const nome =
+        document.getElementById("nome").value;
+
+    const cidade =
+        document.getElementById("cidade").value;
+
+
+    const dados = {
+        nome: nome,
+        cidade: cidade
+    };
+
+
+    if (idEditando == null) {
+
+        await fetch("/pessoas", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(dados)
+
+        });
+
+    } else {
+
+        await fetch("/pessoas/" + idEditando, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(dados)
+
+        });
+
+        idEditando = null;
+
+    }
+
+
+    document.getElementById("nome").value = "";
+
+    document.getElementById("cidade").value = "";
+
+    carregar();
+
+}
+
+
+// EDITAR
+function editar(id, nome, cidade) {
+
+    idEditando = id;
+
+    document.getElementById("nome").value = nome;
+
+    document.getElementById("cidade").value = cidade;
+
+}
+
+
+// EXCLUIR
+async function excluir(id) {
+
+    await fetch("/pessoas/" + id, {
+        method: "DELETE"
+    });
+
+    carregar();
+
+}
+
+
+// Carrega quando abrir a página
+carregar();
+
+</script>
+
+</body>
+
+</html>
